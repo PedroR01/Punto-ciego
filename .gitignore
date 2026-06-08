@@ -70,7 +70,7 @@ ehthumbs.db
 *.log
 
 # ===== OPCIONAL: descomentar solo si el equipo confirma que NO se usan =====
-/[Aa]ssets/[Aa]ssets/Assets antiguos/
+# /[Aa]ssets/[Aa]ssets/Assets antiguos/
 /[Aa]ssets/Scenes/Escenarios antiguos/
 /[Aa]ssets/ExampleAssets/
 /[Aa]ssets/TutorialInfo/
