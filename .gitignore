@@ -1,0 +1,76 @@
+# ===== Unity (generado / local) =====
+.utmp/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+/[Ll]ocal[Cc]ache/
+/[Uu]nity[Gg]enerated/
+/[Ss]erver[Dd]ata/
+ExportedObj/
+sysinfo.txt
+crashlytics-build.properties
+InitTestScene*.unity
+
+# Addressables (build output)
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# ===== IDEs / editores =====
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.sln
+*.csproj
+*.unityproj
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.blend1
+*.blend2
+
+# JetBrains Rider plugin autogenerado
+/[Aa]ssets/Plugins/Editor/JetBrains*
+
+# Plastic SCM / Unity Version Control (si no lo usáis)
+.plastic/
+*.private.0
+*.private.1
+
+# ===== Builds =====
+*.apk
+*.aab
+*.app
+*.unitypackage
+*.unitypackage.meta
+
+# ===== Sistema operativo =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ===== Merge / backups =====
+*.orig
+*.log
+
+# ===== OPCIONAL: descomentar solo si el equipo confirma que NO se usan =====
+/[Aa]ssets/[Aa]ssets/Assets antiguos/
+/[Aa]ssets/Scenes/Escenarios antiguos/
+/[Aa]ssets/ExampleAssets/
+/[Aa]ssets/TutorialInfo/
