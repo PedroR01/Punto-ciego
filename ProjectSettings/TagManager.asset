@@ -20,6 +20,7 @@ TagManager:
   - Computer
   - Locker
   - PostIt
+  - PostItReaded
   layers:
   - Default
   - TransparentFX

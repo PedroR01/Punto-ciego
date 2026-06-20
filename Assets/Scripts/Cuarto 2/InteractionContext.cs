@@ -14,7 +14,8 @@ public enum InteractionObjects
     Computer,
     Skate,
     Locker,
-    PostIt
+    PostIt,
+    PostItReaded
 }
 
 public enum InteractionResult
@@ -26,6 +27,7 @@ public enum InteractionResult
 
 public struct InteractionContext
 {
+    public Transform player;
     public Transform target;
     public InteractionObjects objectType;
     public InteractionResult result;

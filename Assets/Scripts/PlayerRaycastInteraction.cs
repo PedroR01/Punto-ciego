@@ -57,6 +57,7 @@ public class PlayerRaycastInteraction : MonoBehaviour
                 bool targetObject = ParseTagToInteractiveValidation(hit.transform.tag, out InteractionObjects objectType);
                 OnInteraction?.Invoke(new InteractionContext
                 {
+                    player = this.transform,
                     target = hit.transform,
                     objectType = objectType,
                     result = targetObject ? InteractionResult.Correct : InteractionResult.Incorrect
@@ -66,7 +67,7 @@ public class PlayerRaycastInteraction : MonoBehaviour
                     OnCompleted?.Invoke();
                 if (hit.transform.tag.Equals("Book"))
                 {
-#warning Esto está hardcodeado para largarlo funcionando rapido.
+#warning Esto está hardcodeado para largarlo funcionando rapido. En realidad debertía manejarse desde el libro mismo... Como lo hago con los post-it
 
                     GetComponent<FirstPersonMovement>().enabled = false;
                     vCam.enabled = false;
@@ -126,5 +127,24 @@ public class PlayerRaycastInteraction : MonoBehaviour
     {
         Debug.DrawRay(Camera.main.transform.position, hit.transform.position - Camera.main.transform.position, rayColor);
         Debug.Log(hit.collider.name + " captado por raycast a una distancia de " + hit.distance);
+    }
+
+    public void DisableInteractionOnUITriggerStart()
+    {
+        GetComponent<FirstPersonMovement>().enabled = false;
+        vCam.enabled = false;
+        //this.enabled = false;
+    }
+
+    public void EnableInteractionOnUITriggerEnd()
+    {
+        GetComponent<FirstPersonMovement>().enabled = true;
+        vCam.enabled = true;
+        //this.enabled = true;
+    }
+
+    public GameObject GetLastHit()
+    {
+        return lastHit;
     }
 }
