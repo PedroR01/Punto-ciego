@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 14bf960acc89e9743a8e200b6128278a, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 8a433f956c8de4e41abbe42bacd8ee7b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -3050,9 +3050,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: bce4669e33ba8f34d946a1c3d74ae207, type: 3}
+  m_audioClip: {fileID: 8300000, guid: aa9331508bff54546b7547274a5d9cf9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -6585,7 +6585,7 @@ PrefabInstance:
     - target: {fileID: -1461304994638716399, guid: 2bbce779fa2b5ea4dac65e06490f6c25, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 98ed98f43651e374a83d9a86423887d5, type: 2}
+      objectReference: {fileID: 2100000, guid: 3f80a16994af0d542aba27be83b775ea, type: 2}
     - target: {fileID: 919132149155446097, guid: 2bbce779fa2b5ea4dac65e06490f6c25, type: 3}
       propertyPath: m_Name
       value: Locker_animado-0
@@ -7982,6 +7982,32 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2467040170757329343, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
   m_PrefabInstance: {fileID: 2080711140}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &978161465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978161464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: -512
+    m_Top: 350
+    m_Bottom: 350
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &998861811
 GameObject:
   m_ObjectHideFlags: 0
@@ -8619,7 +8645,7 @@ PrefabInstance:
     - target: {fileID: -1461304994638716399, guid: 2bbce779fa2b5ea4dac65e06490f6c25, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f8501ddd8efeb9d498692fc7bc057e83, type: 2}
+      objectReference: {fileID: 2100000, guid: 3f80a16994af0d542aba27be83b775ea, type: 2}
     - target: {fileID: 919132149155446097, guid: 2bbce779fa2b5ea4dac65e06490f6c25, type: 3}
       propertyPath: m_Name
       value: Locker_animado-3
@@ -15801,6 +15827,34 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 09257b8de8379c84f885b3e1225c9859, type: 3}
+    - target: {fileID: 2467040169594720438, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 441
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040169594720438, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 108
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040169594720438, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040169594720438, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040169594720438, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040169594720438, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040169594720440, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2a940a79a2a7ea64ba180d8cf44ad292, type: 3}
     - target: {fileID: 2467040169594720441, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
       value: 6
@@ -15833,6 +15887,70 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
       value: UnityEngine.Behaviour, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329312, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0545e058793fa6746b3c6ef6fb3fd07e, type: 3}
+    - target: {fileID: 2467040170757329312, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329315, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329342, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329342, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329342, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329342, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329342, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040170757329342, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495659, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 441
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495659, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 108
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495659, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495659, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495659, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495659, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467040171165495661, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 94874fe306e4f7f4c932a54f6725b123, type: 3}
     - target: {fileID: 4653694346372931934, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
       propertyPath: m_VideoClip
       value: 
@@ -15949,7 +16067,8 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 4cc81c943c2b27a44b4b8282e6c61ffb, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2467040170757329313, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
 --- !u!1001 &2096590310
 PrefabInstance:
