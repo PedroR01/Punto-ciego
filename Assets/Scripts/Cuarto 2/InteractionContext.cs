@@ -15,7 +15,9 @@ public enum InteractionObjects
     Skate,
     Locker,
     PostIt,
-    PostItReaded
+    PostItReaded,
+    Bench,
+    Sky
 }
 
 public enum InteractionResult

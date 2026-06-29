@@ -24,6 +24,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     private bool canRun = true;
     public bool IsGrounded { get; private set; }
+    public bool IsSwiming { get; private set; }
 
     public bool IsRunning { get; private set; }
 
@@ -107,28 +108,38 @@ public class FirstPersonMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Floor")
+        if (other.gameObject.tag.Equals("Floor"))
             IsGrounded = true;
+        else if (other.gameObject.tag.Equals("Water"))
+            IsSwiming = true;
     }
 
     private void OnCollisionStay(Collision other)
     {
-        if (other.gameObject.tag == "Floor")
+        if (other.gameObject.tag.Equals("Floor"))
             IsGrounded = true;
+        else if (other.gameObject.tag.Equals("Water"))
+            IsSwiming = true;
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Water"))
+            IsSwiming = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         IsGrounded = true;
 
-        if (other.tag == "Cube")
+        if (other.tag.Equals("Box"))
             jumpStrength = 6;
-        else if (other.tag == "Card")
+        else if (other.tag.Equals("Card"))
         {
             jumpStrength = 8;
             playerParent.transform.SetParent(other.transform, true);
         }
-        else if (other.tag == "Floor")
+        else if (other.tag.Equals("Floor"))
             jumpStrength = 4;
     }
 
@@ -136,7 +147,7 @@ public class FirstPersonMovement : MonoBehaviour
     {
         IsGrounded = false;
         jumpStrength = defaul_jump_strength;
-        if (other.tag == "Card")
+        if (other.tag.Equals("Card"))
             playerParent.transform.SetParent(null);
     }
 }

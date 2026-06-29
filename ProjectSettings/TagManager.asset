@@ -21,6 +21,9 @@ TagManager:
   - Locker
   - PostIt
   - PostItReaded
+  - Water
+  - Bench
+  - Sky
   layers:
   - Default
   - TransparentFX

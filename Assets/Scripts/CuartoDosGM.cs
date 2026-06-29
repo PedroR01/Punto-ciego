@@ -16,6 +16,9 @@ public class CuartoDosGM : MonoBehaviour
     private bool sceneCompleted = false;
 
     [SerializeField]
+    private float interactionCounterUI;
+
+    [SerializeField]
     private Transform closedBook;
 
     [SerializeField]
@@ -58,7 +61,7 @@ public class CuartoDosGM : MonoBehaviour
         else if (context.result == InteractionResult.Correct)
         {
             HandleSoundSfx(context.target);
-
+            context.target.GetComponent<UIInteractionTransition>().ActivateColor();
             sceneInteractionObjects.Remove(context.objectType);
             OnCorrectState?.Invoke(context);
         }

@@ -143,6 +143,16 @@ public class PlayerRaycastInteraction : MonoBehaviour
         //this.enabled = true;
     }
 
+    public void ChangeCamera(CinemachineVirtualCamera newCam)
+    {
+        if (vCam != null)
+        {
+            DisableInteractionOnUITriggerStart();
+            vCam = newCam;
+            maxDistance = 20f;
+        }
+    }
+
     public GameObject GetLastHit()
     {
         return lastHit;

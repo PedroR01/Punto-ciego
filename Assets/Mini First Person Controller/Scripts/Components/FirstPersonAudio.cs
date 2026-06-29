@@ -8,7 +8,13 @@ public class FirstPersonAudio : MonoBehaviour
     [Header("Step")]
     public AudioSource stepAudio;
 
+    public AudioClip[] footstepClips;
+
     public AudioSource runningAudio;
+    public float walkStepInterval = 0.5f;
+    public float runStepInterval = 0.3f;
+
+    private float nextStepTime;
 
     [Tooltip("Minimum velocity for moving audio to play")]
     public float velocityThreshold = .01f;
@@ -25,10 +31,12 @@ public class FirstPersonAudio : MonoBehaviour
     public AudioSource jumpAudio;
 
     private AudioSource[] MovingAudios => new AudioSource[] { stepAudio, runningAudio };
+    private float defaultVolume;
 
     private void Awake()
     {
         FirstPersonMovement.OnJump += PlayJumpAudio;
+        defaultVolume = stepAudio.volume;
     }
 
     private void Reset()
@@ -41,11 +49,43 @@ public class FirstPersonAudio : MonoBehaviour
         float velocity = Vector3.Distance(CurrentCharacterPosition, lastCharacterPosition);
 
         if (velocity >= velocityThreshold && character.IsGrounded)
-            SetPlayingMovingAudio(stepAudio);
+        {
+            float interval = character.IsRunning
+             ? runStepInterval
+             : walkStepInterval;
+
+            if (Time.time >= nextStepTime)
+            {
+                PlayFootstep();
+                nextStepTime = Time.time + interval;
+            }
+        }
         else
             SetPlayingMovingAudio(null);
 
         lastCharacterPosition = CurrentCharacterPosition;
+    }
+
+    private void PlayFootstep()
+    {
+        if (footstepClips.Length == 0)
+            return;
+
+        AudioClip clip;
+
+        if (character.IsSwiming)
+        {
+            clip = footstepClips[Random.Range(5, footstepClips.Length)];
+            stepAudio.volume = defaultVolume / 2;
+        }
+        else
+        {
+            clip = footstepClips[Random.Range(0, 5)];
+            stepAudio.volume = defaultVolume;
+        }
+
+        stepAudio.pitch = Random.Range(0.95f, 1.05f);
+        stepAudio.PlayOneShot(clip);
     }
 
     /// <summary>
