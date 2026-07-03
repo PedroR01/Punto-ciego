@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SittingInteraction : MonoBehaviour
 {
+    private bool isSit = false;
+
     [SerializeField]
     private CinemachineVirtualCamera benchCamera;
 
@@ -19,6 +21,10 @@ public class SittingInteraction : MonoBehaviour
     private void HandleSitEvent(InteractionContext context)
     {
         // context.player.position = context.target.position;
-        context.player.GetComponent<PlayerRaycastInteraction>().ChangeCamera(benchCamera);
+        if (!isSit)
+        {
+            context.player.GetComponent<PlayerRaycastInteraction>().ChangeCamera(benchCamera);
+            isSit = true;
+        }
     }
 }

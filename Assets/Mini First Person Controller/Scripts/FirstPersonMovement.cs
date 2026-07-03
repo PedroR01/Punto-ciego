@@ -50,18 +50,6 @@ public class FirstPersonMovement : MonoBehaviour
         defaul_jump_strength = jumpStrength;
     }
 
-    private void OnEnable()
-    {
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        UnityEngine.Cursor.visible = false;
-    }
-
-    private void OnDisable()
-    {
-        UnityEngine.Cursor.lockState = CursorLockMode.None;
-        UnityEngine.Cursor.visible = true;
-    }
-
     private void Update()
     {
         IsRunning = canRun && Input.GetKey(runningKey);

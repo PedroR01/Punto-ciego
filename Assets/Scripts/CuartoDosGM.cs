@@ -13,8 +13,6 @@ public class CuartoDosGM : MonoBehaviour
 
     public static event Action OnDefaultState;
 
-    private bool sceneCompleted = false;
-
     [SerializeField]
     private float interactionCounterUI;
 
@@ -69,8 +67,6 @@ public class CuartoDosGM : MonoBehaviour
             OnDefaultState?.Invoke();
     }
 
-    public bool GetSceneCompleted() => sceneCompleted;
-
     public List<InteractionObjects> GetInteractiveObjectsRemaining() => sceneInteractionObjects;
 
     public bool IsSceneInteractionClear() => sceneInteractionObjects.Count <= 0;
@@ -88,7 +84,6 @@ public class CuartoDosGM : MonoBehaviour
     {
         Debug.Log("Escenario terminado, abriendo libro...");
 
-        sceneCompleted = true;
         closedBook.gameObject.SetActive(false);
         openBook.gameObject.SetActive(true);
     }

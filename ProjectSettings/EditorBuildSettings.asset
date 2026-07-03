@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Cuarto 5.unity
     guid: 6daa9c3b32910de4a884f2236995b3d9
   - enabled: 1
-    path: Assets/Scenes/Cuarto 6 Pedro.unity
+    path: Assets/Scenes/Cuarto 6.unity
     guid: 8061e38f24fe51844bbfe6738d750cca
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: f57935c04b4234542abeb344ef6f2beb, type: 2}
