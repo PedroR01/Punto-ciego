@@ -1,7 +1,8 @@
-using Cinemachine;
+﻿using Cinemachine;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerRaycastInteraction : MonoBehaviour
 {
@@ -20,25 +21,34 @@ public class PlayerRaycastInteraction : MonoBehaviour
     [SerializeField]
     private LayerMask targetMask;
 
+    [Header("Temporizador de mirada")]
+    [SerializeField] private float requiredGazeTime = 3f;   // Segundos necesarios
+
+    [Header("Indicador visual (centro pantalla)")]
+    [SerializeField] private Image gazeIndicator; // Tu imagen de UI
+
+    [SerializeField] private AnimationCurve opacityCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
     [SerializeField]
     private CinemachineVirtualCamera vCam;
 
     [SerializeField]
     private GameObject bookUI;
 
+    private float gazeTimer = 0f;
+    private bool isGazing = false;       // ¿Está mirando un objeto válido ahora mismo?
+    private bool interactionFired = false; // Para no disparar la interacción más de una vez
+
+    private void Awake()
+    {
+        // Asegurarse de que el indicador empiece invisible
+        if (gazeIndicator != null)
+            SetIndicatorAlpha(0f);
+    }
+
     private void FixedUpdate()
     {
         CheckForColliders();
-    }
-
-    /// <summary>
-    /// Verifica que el tag del objeto interactuable sea compatible con los objetos necesarios para interactuar y pasar al siguiente escenario.
-    /// </summary>
-    /// <param name="tag"></param>
-    /// <returns></returns>
-    private bool ParseTagToInteractiveValidation(string tag, out InteractionObjects result)
-    {
-        return Enum.TryParse(tag, true, out result) && CuartoDosGM.Instance.GetInteractiveObjectsRemaining().Contains(result);
     }
 
     /// <summary>
@@ -51,46 +61,119 @@ public class PlayerRaycastInteraction : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, targetMask))
         {
             //DebugRaycast(hit, Color.red);
+            bool targetObject = ParseTagToInteractiveValidation(hit.transform.tag, out InteractionObjects objectType);
+
+            // --- Cambió el objeto mirado -> resetear timer (interaccion cancelada) ---------------
             if (hit.collider.gameObject != lastHit)
             {
+                ResetGaze();
                 lastHit = hit.collider.gameObject;
-                bool targetObject = ParseTagToInteractiveValidation(hit.transform.tag, out InteractionObjects objectType);
-                OnInteraction?.Invoke(new InteractionContext
+                interactionFired = false;
+            }
+            // En el caso de que no se haya completado la interacción con el objeto correcto...
+            if (!interactionFired)
+            {
+                // ── Acumular tiempo solo en objetos válidos ──────────────────────────
+                if (targetObject)
                 {
-                    player = this.transform,
-                    target = hit.transform,
-                    objectType = objectType,
-                    result = targetObject ? InteractionResult.Correct : InteractionResult.Incorrect
+                    isGazing = true;
+                    gazeTimer += Time.fixedDeltaTime;
+                    Debug.Log(gazeTimer);
+                    // Actualizar opacidad del indicador según el progreso
+                    float progress = Mathf.Clamp01(gazeTimer / requiredGazeTime);
+                    SetIndicatorAlpha(opacityCurve.Evaluate(progress));
+
+                    // ── Interacción completada ───────────────────────────────────────
+                    if (gazeTimer >= requiredGazeTime)
+                    {
+                        interactionFired = true;
+                        SetIndicatorAlpha(0f); // Ocultar al completar
+
+                        OnInteraction?.Invoke(new InteractionContext
+                        {
+                            player = this.transform,
+                            target = hit.transform,
+                            objectType = objectType,
+                            result = InteractionResult.Correct
+                        });
+
+                        if (CuartoDosGM.Instance.IsSceneInteractionClear())
+                            OnCompleted?.Invoke();
+                    }
                 }
-                );
-                if (targetObject && CuartoDosGM.Instance.IsSceneInteractionClear())
-                    OnCompleted?.Invoke();
-                if (hit.transform.tag.Equals("Book"))
+                else
                 {
-#warning Esto est� hardcodeado para largarlo funcionando rapido. En realidad debert�a manejarse desde el libro mismo... Como lo hago con los post-it
+                    // Objeto no válido que influye en el escenario/usuario. Falta diferenciar más con los Default en el condicional interactionTrigger...
+                    if (!targetObject)
+                    {
+                        OnInteraction?.Invoke(new InteractionContext
+                        {
+                            player = this.transform,
+                            target = hit.transform,
+                            objectType = objectType,
+                            result = InteractionResult.Incorrect
+                        }
+                    );
+                        interactionFired = true;
+                    }
 
-                    GetComponent<FirstPersonMovement>().enabled = false;
-                    vCam.enabled = false;
-                    bookUI.SetActive(true);
+                    // Objeto único para cuando se terminan todos los objetos válidos del nivel. Última interacción.
+                    if (hit.transform.tag.Equals("Book"))
+                    {
+#warning Esto está hardcodeado para largarlo funcionando rapido. En realidad debertía manejarse desde el libro mismo... Como lo hago con los post-it
+
+                        DisableInteractionOnUITriggerStart();
+                        bookUI.SetActive(true);
+                        interactionFired = true;
+                    }
                 }
-
-                //StartCoroutine(CheckInteractionStateAfterDelay(4f)); // Este tiempo tiene que ser igual al temblor de la camara con la silla en CameraShakeFeedback.cs
                 interactionTrigger = true;
             }
         }
-        else if (interactionTrigger) // Objetos que no son los principales para el libro, pero que pueden desencadenar efectos en el entorno.
+        else if (interactionTrigger) // Objetos que no son los principales para el libro, pero que PUEDEN desencadenar efectos en el entorno.
         {
-#warning Aca deberia haber una especie de espera o control para no disparar automaticamente eventos sin haber terminado la anterior interaccion.
+            ResetGaze();
 
             OnInteraction?.Invoke(new InteractionContext
             {
-                target = hit.transform,
+                target = default,
                 objectType = InteractionObjects.None,
                 result = InteractionResult.Default
-            }
-            );
+            });
+
             interactionTrigger = false;
         }
+    }
+
+    /// <summary>
+    /// Reinicia el temporizador y el indicador visual.
+    /// </summary>
+    private void ResetGaze()
+    {
+        gazeTimer = 0f;
+        isGazing = false;
+        SetIndicatorAlpha(0f);
+    }
+
+    /// <summary>
+    /// Asigna el alpha del indicador de mirada.
+    /// </summary>
+    private void SetIndicatorAlpha(float alpha)
+    {
+        if (gazeIndicator == null) return;
+        Color c = gazeIndicator.color;
+        c.a = alpha;
+        gazeIndicator.color = c;
+    }
+
+    /// <summary>
+    /// Verifica que el tag del objeto interactuable sea compatible con los objetos necesarios para interactuar y pasar al siguiente escenario.
+    /// </summary>
+    /// <param name="tag"></param>
+    /// <returns></returns>
+    private bool ParseTagToInteractiveValidation(string tag, out InteractionObjects result)
+    {
+        return Enum.TryParse(tag, true, out result) && CuartoDosGM.Instance.GetInteractiveObjectsRemaining().Contains(result);
     }
 
     // Por ahora utilizado para limpiar la ult referencia al clickear en quedarse en el nivel.
@@ -108,7 +191,7 @@ public class PlayerRaycastInteraction : MonoBehaviour
     private IEnumerator CheckInteractionStateAfterDelay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
-        // Faltar�a volver a chequear que lo siga mirando...
+        // Faltaría volver a chequear que lo siga mirando...
         OnCompleted?.Invoke();
     }
 
@@ -129,25 +212,30 @@ public class PlayerRaycastInteraction : MonoBehaviour
         Debug.Log(hit.collider.name + " captado por raycast a una distancia de " + hit.distance);
     }
 
-    public void DisableInteractionOnUITriggerStart()
+    public void DisableInteractionOnUITriggerStart(bool showMouse = true)
     {
         GetComponent<FirstPersonMovement>().enabled = false;
         vCam.enabled = false;
-        //this.enabled = false;
+        if (showMouse)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     public void EnableInteractionOnUITriggerEnd()
     {
         GetComponent<FirstPersonMovement>().enabled = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         vCam.enabled = true;
-        //this.enabled = true;
     }
 
     public void ChangeCamera(CinemachineVirtualCamera newCam)
     {
         if (vCam != null)
         {
-            DisableInteractionOnUITriggerStart();
+            DisableInteractionOnUITriggerStart(false);
             vCam = newCam;
             maxDistance = 20f;
         }
@@ -156,5 +244,17 @@ public class PlayerRaycastInteraction : MonoBehaviour
     public GameObject GetLastHit()
     {
         return lastHit;
+    }
+
+    private void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void OnDisable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
