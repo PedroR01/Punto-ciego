@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class FirstPersonMovement : MonoBehaviour
 {
@@ -48,6 +45,11 @@ public class FirstPersonMovement : MonoBehaviour
 
         IsGrounded = false;
         defaul_jump_strength = jumpStrength;
+    }
+
+    private void Start()
+    {
+        this.enabled = false;
     }
 
     private void Update()

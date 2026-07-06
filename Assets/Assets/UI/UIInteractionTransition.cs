@@ -9,6 +9,9 @@ public class UIInteractionTransition : MonoBehaviour
 
     public float transitionDuration = 1.5f;
 
+    [SerializeField]
+    private ObjectZoneAudioTrigger soundZone;
+
     private Material _mat;
     private static readonly int SatProp = Shader.PropertyToID("_Saturation");
 
@@ -42,5 +45,7 @@ public class UIInteractionTransition : MonoBehaviour
         }
 
         _mat.SetFloat(SatProp, 1f);
+        if (soundZone)
+            soundZone.enabled = true;
     }
 }

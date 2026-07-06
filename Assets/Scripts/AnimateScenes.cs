@@ -30,7 +30,12 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
     [Header("Behaviour")]
     [SerializeField] private bool isMenu;
 
+    private bool readyToContinue = false;
+
     private bool isTransitioning;
+
+    [SerializeField]
+    private GameObject readyButton;
 
     private void Awake()
     {
@@ -147,6 +152,18 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
         yield return PlayAudio(audioConfig.audioOut);
 
         yield return new WaitWhile(() => audioConfig.audioOut.isPlaying);
+
+        videoPlayer.Pause();
+        readyButton.SetActive(true);
+        yield return new WaitUntil(() => readyToContinue);
+        readyToContinue = false;
+        readyButton.SetActive(false);
+        videoPlayer.Play();
+        yield return new WaitWhile(() => videoPlayer.isPlaying);
+        readyButton.SetActive(true);
+        yield return new WaitUntil(() => readyToContinue);
+        readyToContinue = false;
+        readyButton.SetActive(false);
     }
 
     // --------------------------------------------------
@@ -160,5 +177,10 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
             % SceneManager.sceneCountInBuildSettings;
 
         SceneManager.LoadScene(nextIndex);
+    }
+
+    public void ResumeReadyToContinue()
+    {
+        readyToContinue = true;
     }
 }

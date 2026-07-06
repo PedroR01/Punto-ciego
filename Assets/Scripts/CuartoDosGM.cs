@@ -8,7 +8,6 @@ public class CuartoDosGM : MonoBehaviour
 
     public static event Action OnIncorrectState;
 
-    //public static event Action OnCorrectState;
     public static event Action<InteractionContext> OnCorrectState;
 
     public static event Action OnDefaultState;
@@ -24,6 +23,9 @@ public class CuartoDosGM : MonoBehaviour
 
     [SerializeField]
     private List<InteractionObjects> sceneInteractionObjects;
+
+    [SerializeField]
+    private AudioManager audioMg;
 
     private void Awake()
     {
@@ -52,14 +54,13 @@ public class CuartoDosGM : MonoBehaviour
     {
         if (context.result == InteractionResult.Incorrect)
         {
-            HandleSoundSfx(context.target);
-
             OnIncorrectState?.Invoke();
         }
         else if (context.result == InteractionResult.Correct)
         {
             HandleSoundSfx(context.target);
-            context.target.GetComponent<UIInteractionTransition>().ActivateColor();
+
+            context.target.GetComponent<UIInteractionTransition>().ActivateColor(); // AGREGRAR SCRIPT A C/U DE LOS INTERACTUABLES PARA GM
             sceneInteractionObjects.Remove(context.objectType);
             OnCorrectState?.Invoke(context);
         }
@@ -75,9 +76,16 @@ public class CuartoDosGM : MonoBehaviour
 
     private void HandleSoundSfx(Transform gameObject)
     {
-        if (gameObject.TryGetComponent<AudioSource>(out var objSfx))
-            if (!objSfx.isPlaying)
-                objSfx.Play();
+        AudioSource sound = gameObject.GetComponent<AudioSource>();
+        if (sound)
+        {
+            if (!audioMg.isActiveAndEnabled)
+                audioMg.enabled = true;
+
+            audioMg.StopAllWithFadeOut(); // Se apaga automaticamente
+            if (!sound.isPlaying)
+                sound.Play();
+        }
     }
 
     private void HandleSceneCompleted()
