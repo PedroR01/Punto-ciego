@@ -12,8 +12,7 @@ public class respawn : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Se imprime/ejecuta 2 veces pq tamb toma el trigger del groundCheck
-        Debug.Log("TP");
         playerTf.position = respawnTeleport.position;
+        respawnTeleport.GetComponent<ParticleSystem>().Play();
     }
 }

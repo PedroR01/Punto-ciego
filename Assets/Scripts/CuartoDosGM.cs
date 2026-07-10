@@ -13,9 +13,6 @@ public class CuartoDosGM : MonoBehaviour
     public static event Action OnDefaultState;
 
     [SerializeField]
-    private float interactionCounterUI;
-
-    [SerializeField]
     private Transform closedBook;
 
     [SerializeField]

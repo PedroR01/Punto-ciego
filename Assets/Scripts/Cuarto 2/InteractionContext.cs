@@ -17,7 +17,8 @@ public enum InteractionObjects
     PostIt,
     PostItReaded,
     Bench,
-    Sky
+    Sky,
+    KidsGroup
 }
 
 public enum InteractionResult

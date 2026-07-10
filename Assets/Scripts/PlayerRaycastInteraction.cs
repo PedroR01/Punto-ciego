@@ -78,7 +78,6 @@ public class PlayerRaycastInteraction : MonoBehaviour
                 {
                     isGazing = true;
                     gazeTimer += Time.fixedDeltaTime;
-                    Debug.Log(gazeTimer);
                     // Actualizar opacidad del indicador según el progreso
                     float progress = Mathf.Clamp01(gazeTimer / requiredGazeTime);
                     SetIndicatorAlpha(opacityCurve.Evaluate(progress));
