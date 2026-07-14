@@ -22,6 +22,11 @@ public class BubbleFeedback : MonoBehaviour
         CuartoDosGM.OnCorrectState += OnBubbleInteracted;
     }
 
+    private void OnDisable()
+    {
+        CuartoDosGM.OnCorrectState -= OnBubbleInteracted;
+    }
+
     public void OnBubbleInteracted(InteractionContext actionTarget)
     {
         // Verificar si es el locker correcto

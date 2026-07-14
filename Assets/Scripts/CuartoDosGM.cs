@@ -76,10 +76,13 @@ public class CuartoDosGM : MonoBehaviour
         AudioSource sound = gameObject.GetComponent<AudioSource>();
         if (sound)
         {
-            if (!audioMg.isActiveAndEnabled)
-                audioMg.enabled = true;
+            if (audioMg != null)
+            {
+                if (!audioMg.isActiveAndEnabled)
+                    audioMg.enabled = true;
+                audioMg.StopAllWithFadeOut(); // Se apaga automaticamente
+            }
 
-            audioMg.StopAllWithFadeOut(); // Se apaga automaticamente
             if (!sound.isPlaying)
                 sound.Play();
         }
