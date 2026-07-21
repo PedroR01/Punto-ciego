@@ -11954,7 +11954,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2467040171165495658, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: StopAllWithFadeOut
+      value: StopAll
       objectReference: {fileID: 0}
     - target: {fileID: 2467040171165495658, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
@@ -11999,7 +11999,7 @@ PrefabInstance:
     - target: {fileID: 4653694346372931934, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
       propertyPath: m_VideoClip
       value: 
-      objectReference: {fileID: 32900000, guid: 6de69ae9c7158414eb37b7d660282f46, type: 3}
+      objectReference: {fileID: 32900000, guid: b819a50500839cc4eae6ec9c81bf2829, type: 3}
     - target: {fileID: 4653694346372931934, guid: 01a2023109dbeb243b98e9e0eac2e826, type: 3}
       propertyPath: m_TargetTexture
       value: 
@@ -19433,14 +19433,14 @@ PrefabInstance:
     - target: {fileID: 2741939941749382265, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_NoiseProfile
       value: 
-      objectReference: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+      objectReference: {fileID: 11400000, guid: a3dacaec0287d7444b4bd276816e1666, type: 2}
     - target: {fileID: 2741939941749382265, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_AmplitudeGain
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2741939941749382265, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_FrequencyGain
-      value: 0.45
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4713021182889224271, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_LocalPosition.x

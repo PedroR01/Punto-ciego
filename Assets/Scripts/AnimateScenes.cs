@@ -1,17 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using System.Collections;
 
-public class AnimateScenes : MonoBehaviour, IPointerClickHandler
+public class AnimateScenes : MonoBehaviour
 {
     [Header("Fade")]
     [SerializeField] private RawImage blackScreen;
 
-#warning hardcodeado... este parametro se usa solo para el menú, no para los niveles...
-    [SerializeField] private RawImage instructions;
     [SerializeField] private float fadeDuration = 1.5f;
 
     [Header("Subtitles")]
@@ -48,13 +45,26 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // --------------------------------------------------
-
-    public void OnPointerClick(PointerEventData eventData)
+    private void OnEnable()
     {
-        if (isTransitioning) return;
-        StartCoroutine(TransitionRoutine());
+        // Subscribe to the end event when the script becomes active
+        if (isMenu)
+            this.GetComponentInChildren<VideoPlayer>().loopPointReached += OnVideoFinished;
     }
+
+    private void OnDisable()
+    {
+        // Always unsubscribe from events to prevent memory leaks
+        if (isMenu)
+            this.GetComponentInChildren<VideoPlayer>().loopPointReached -= OnVideoFinished;
+    }
+
+    private void OnVideoFinished(VideoPlayer source)
+    {
+        readyButton.SetActive(true);
+    }
+
+    // --------------------------------------------------
 
     public void ExecuteTransition()
     {
@@ -78,13 +88,7 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
 
         yield return FadeToBlack();
 
-        if (isMenu)
-        {
-            instructions.gameObject.SetActive(true);
-            yield return new WaitForSeconds(2.5f);
-            blackScreen.gameObject.SetActive(false);
-        }
-        else
+        if (!isMenu)
         {
             yield return PlayVideo();
             yield return FadeToBlack();
@@ -99,7 +103,7 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
 
     private IEnumerator FadeToBlack()
     {
-        transform.GetComponent<Image>().enabled = false;
+        //transform.GetComponent<Image>().enabled = false;
         blackScreen.gameObject.SetActive(true);
 
         float elapsed = 0f;

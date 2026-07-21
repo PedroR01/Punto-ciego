@@ -120,6 +120,23 @@ public class AudioManager : MonoBehaviour
         this.enabled = false;
     }
 
+    // Para llamaar al pasar de nivel
+    public void StopAll()
+    {
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            AudioSource audio = audioSources[i];
+
+            if (audio != null)
+            {
+                float targetVolume = 0f;
+
+                StartCoroutine(FadeOut(audio, fadeOutDuration, targetVolume));
+            }
+        }
+        this.enabled = false;
+    }
+
     private IEnumerator FadeOut(AudioSource audio, float duration, float targetVol)
     {
         float currentTime = 0f;
