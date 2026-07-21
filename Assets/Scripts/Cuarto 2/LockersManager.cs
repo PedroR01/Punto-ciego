@@ -22,25 +22,16 @@ public class LockersManager : MonoBehaviour
 
     public void OnLockerInteracted(InteractionContext actionTarget)
     {
-        // Verificar si es el locker correcto
-        if (lockers[currentLockerIndex].locker != actionTarget.target)
-        {
-            Debug.Log("Locker incorrecto.");
-            return;
-        }
-
-        Debug.Log($"Locker correcto: {actionTarget.target}");
         OpenLocker(actionTarget.target);
 
         // Encender las luces del siguiente
         if (currentLockerIndex < lockers.Length - 1)
         {
+            lockers[currentLockerIndex].locker.GetComponent<BoxCollider>().enabled = false;
             currentLockerIndex++;
+            lockers[currentLockerIndex].locker.GetComponent<BoxCollider>().enabled = true;
             foreach (var light in lockers[currentLockerIndex].lights)
-            {
-                Debug.Log($"Encendiendo la luz - {light} - de {lockers[currentLockerIndex].locker}");
                 light.enabled = true;
-            }
         }
         else
             Debug.Log("Todos los lockers han sido abiertos");

@@ -96,8 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: fea7dec7bc226c447a1bc329fe5e44fc, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 9dbdf39c438e3144f8e956ed2b595c44, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -21379,14 +21379,14 @@ PrefabInstance:
     - target: {fileID: 2741939941749382265, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_NoiseProfile
       value: 
-      objectReference: {fileID: 11400000, guid: a3dacaec0287d7444b4bd276816e1666, type: 2}
+      objectReference: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
     - target: {fileID: 2741939941749382265, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_AmplitudeGain
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2741939941749382265, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_FrequencyGain
-      value: 0.5
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 4713021182889224271, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_LocalPosition.x
