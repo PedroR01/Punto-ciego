@@ -20,6 +20,14 @@ public class AnimateScenes : MonoBehaviour
     [SerializeField] private RawImage visualResource;
 
     [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private VideoClip videoFinal;
+    [SerializeField] private GameObject placaFinal;
+
+    [SerializeField]
+    private float videoTimeStop = 10f;
+
+    [SerializeField]
+    private GameObject readyButton;
 
     [Header("Audio")]
     [SerializeField] private SceneTransitionAudio audioConfig;
@@ -27,12 +35,11 @@ public class AnimateScenes : MonoBehaviour
     [Header("Behaviour")]
     [SerializeField] private bool isMenu;
 
+    [SerializeField] private bool isFinal;
+
     private bool readyToContinue = false;
 
     private bool isTransitioning;
-
-    [SerializeField]
-    private GameObject readyButton;
 
     private void Awake()
     {
@@ -93,8 +100,16 @@ public class AnimateScenes : MonoBehaviour
             yield return PlayVideo();
             yield return FadeToBlack();
         }
-
-        LoadNextScene();
+        if (isFinal)
+        {
+            yield return PlayVideo(videoFinal);
+            placaFinal.SetActive(true);
+            yield return null;
+        }
+        else
+        {
+            LoadNextScene();
+        }
     }
 
     // --------------------------------------------------
@@ -153,17 +168,39 @@ public class AnimateScenes : MonoBehaviour
 
         if (subtitles.Length > 0)
             StartCoroutine(ShowSubtitlesRoutine(1));
-        yield return PlayAudio(audioConfig.audioOut);
+
+        if (audioConfig.audioOut == null) yield break;
+
+        audioConfig.audioOut.Play();
+        yield return new WaitWhile(() => videoPlayer.time < videoTimeStop);
+        videoPlayer.Pause();
 
         yield return new WaitWhile(() => audioConfig.audioOut.isPlaying);
-
-        videoPlayer.Pause();
         readyButton.SetActive(true);
         yield return new WaitUntil(() => readyToContinue);
+
         readyToContinue = false;
         readyButton.SetActive(false);
         videoPlayer.Play();
         yield return new WaitWhile(() => videoPlayer.isPlaying);
+
+        readyButton.SetActive(true);
+        yield return new WaitUntil(() => readyToContinue);
+
+        readyToContinue = false;
+        readyButton.SetActive(false);
+    }
+
+    private IEnumerator PlayVideo(VideoClip video)
+    {
+        videoPlayer.clip = video;
+        videoPlayer.Prepare();
+        yield return new WaitUntil(() => videoPlayer.isPrepared);
+
+        blackScreen.gameObject.SetActive(false);
+        videoPlayer.Play();
+        yield return new WaitWhile(() => videoPlayer.isPlaying);
+        videoPlayer.Pause();
         readyButton.SetActive(true);
         yield return new WaitUntil(() => readyToContinue);
         readyToContinue = false;

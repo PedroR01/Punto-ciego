@@ -20,6 +20,11 @@ public class LockersManager : MonoBehaviour
         CuartoDosGM.OnCorrectState += OnLockerInteracted;
     }
 
+    private void OnDisable()
+    {
+        CuartoDosGM.OnCorrectState -= OnLockerInteracted;
+    }
+
     public void OnLockerInteracted(InteractionContext actionTarget)
     {
         OpenLocker(actionTarget.target);
