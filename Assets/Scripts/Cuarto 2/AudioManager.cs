@@ -9,8 +9,16 @@ public class AudioManager : MonoBehaviour
     [Header("Sonidos ambiente")]
     [SerializeField] private AudioSource[] audioSources;
 
-    [Header("Configuración Fade In")]
-    [SerializeField] private float fadeDuration = 2f;
+    [Header("Configuración Fade audios")]
+    [SerializeField] private float fadeInDuration = 2f;
+
+    [SerializeField] private float fadeOutDuration = 5f;
+
+    [SerializeField]
+    private bool startsInLowVolume = false;
+
+    [SerializeField]
+    private FirstPersonMovement playerMovement;
 
     private float[] originalVolumes;
     private bool hasTriggered = false;
@@ -29,14 +37,27 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (startsInLowVolume)
+        {
+            PlayAllWithFadeIn();
+            StartCoroutine(EnablePlayerMovement());
+            hasTriggered = true;
+            this.enabled = false;
+        }
+    }
+
     private void Update()
     {
-        if (!hasTriggered && referenceAudio != null)
+        if (!startsInLowVolume && (!hasTriggered && referenceAudio != null))
         {
             if (!referenceAudio.isPlaying && referenceAudio.time > 0)
             {
-                hasTriggered = true;
                 PlayAllWithFadeIn();
+                StartCoroutine(EnablePlayerMovement());
+                hasTriggered = true;
+                this.enabled = false;
             }
         }
     }
@@ -54,9 +75,15 @@ public class AudioManager : MonoBehaviour
                 audio.volume = 0f;
                 audio.Play();
 
-                StartCoroutine(FadeIn(audio, fadeDuration, targetVolume));
+                StartCoroutine(FadeIn(audio, fadeInDuration, targetVolume));
             }
         }
+    }
+
+    private IEnumerator EnablePlayerMovement()
+    {
+        yield return new WaitWhile(() => referenceAudio.isPlaying);
+        playerMovement.enabled = true;
     }
 
     private IEnumerator FadeIn(AudioSource audio, float duration, float targetVol)
@@ -86,9 +113,28 @@ public class AudioManager : MonoBehaviour
             {
                 float targetVolume = 0f;
 
-                StartCoroutine(FadeOut(audio, fadeDuration, targetVolume));
+                StartCoroutine(FadeOut(audio, fadeOutDuration, targetVolume));
+                StartCoroutine(FadeIn(audio, fadeOutDuration, originalVolumes[i]));
             }
         }
+        this.enabled = false;
+    }
+
+    // Para llamaar al pasar de nivel
+    public void StopAll()
+    {
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            AudioSource audio = audioSources[i];
+
+            if (audio != null)
+            {
+                float targetVolume = 0f;
+
+                StartCoroutine(FadeOut(audio, fadeOutDuration, targetVolume));
+            }
+        }
+        this.enabled = false;
     }
 
     private IEnumerator FadeOut(AudioSource audio, float duration, float targetVol)

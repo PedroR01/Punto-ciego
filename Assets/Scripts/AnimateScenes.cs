@@ -1,17 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using System.Collections;
 
-public class AnimateScenes : MonoBehaviour, IPointerClickHandler
+public class AnimateScenes : MonoBehaviour
 {
     [Header("Fade")]
     [SerializeField] private RawImage blackScreen;
 
-#warning hardcodeado... este parametro se usa solo para el menú, no para los niveles...
-    [SerializeField] private RawImage instructions;
     [SerializeField] private float fadeDuration = 1.5f;
 
     [Header("Subtitles")]
@@ -23,12 +20,24 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
     [SerializeField] private RawImage visualResource;
 
     [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private VideoClip videoFinal;
+    [SerializeField] private GameObject placaFinal;
+
+    [SerializeField]
+    private float videoTimeStop = 10f;
+
+    [SerializeField]
+    private GameObject readyButton;
 
     [Header("Audio")]
     [SerializeField] private SceneTransitionAudio audioConfig;
 
     [Header("Behaviour")]
     [SerializeField] private bool isMenu;
+
+    [SerializeField] private bool isFinal;
+
+    private bool readyToContinue = false;
 
     private bool isTransitioning;
 
@@ -43,13 +52,26 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // --------------------------------------------------
-
-    public void OnPointerClick(PointerEventData eventData)
+    private void OnEnable()
     {
-        if (isTransitioning) return;
-        StartCoroutine(TransitionRoutine());
+        // Subscribe to the end event when the script becomes active
+        if (isMenu)
+            this.GetComponentInChildren<VideoPlayer>().loopPointReached += OnVideoFinished;
     }
+
+    private void OnDisable()
+    {
+        // Always unsubscribe from events to prevent memory leaks
+        if (isMenu)
+            this.GetComponentInChildren<VideoPlayer>().loopPointReached -= OnVideoFinished;
+    }
+
+    private void OnVideoFinished(VideoPlayer source)
+    {
+        readyButton.SetActive(true);
+    }
+
+    // --------------------------------------------------
 
     public void ExecuteTransition()
     {
@@ -73,19 +95,21 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
 
         yield return FadeToBlack();
 
-        if (isMenu)
-        {
-            instructions.gameObject.SetActive(true);
-            yield return new WaitForSeconds(2.5f);
-            blackScreen.gameObject.SetActive(false);
-        }
-        else
+        if (!isMenu)
         {
             yield return PlayVideo();
             yield return FadeToBlack();
         }
-
-        LoadNextScene();
+        if (isFinal)
+        {
+            yield return PlayVideo(videoFinal);
+            placaFinal.SetActive(true);
+            yield return null;
+        }
+        else
+        {
+            LoadNextScene();
+        }
     }
 
     // --------------------------------------------------
@@ -94,7 +118,7 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
 
     private IEnumerator FadeToBlack()
     {
-        transform.GetComponent<Image>().enabled = false;
+        //transform.GetComponent<Image>().enabled = false;
         blackScreen.gameObject.SetActive(true);
 
         float elapsed = 0f;
@@ -144,9 +168,43 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
 
         if (subtitles.Length > 0)
             StartCoroutine(ShowSubtitlesRoutine(1));
-        yield return PlayAudio(audioConfig.audioOut);
+
+        if (audioConfig.audioOut == null) yield break;
+
+        audioConfig.audioOut.Play();
+        yield return new WaitWhile(() => videoPlayer.time < videoTimeStop);
+        videoPlayer.Pause();
 
         yield return new WaitWhile(() => audioConfig.audioOut.isPlaying);
+        readyButton.SetActive(true);
+        yield return new WaitUntil(() => readyToContinue);
+
+        readyToContinue = false;
+        readyButton.SetActive(false);
+        videoPlayer.Play();
+        yield return new WaitWhile(() => videoPlayer.isPlaying);
+
+        readyButton.SetActive(true);
+        yield return new WaitUntil(() => readyToContinue);
+
+        readyToContinue = false;
+        readyButton.SetActive(false);
+    }
+
+    private IEnumerator PlayVideo(VideoClip video)
+    {
+        videoPlayer.clip = video;
+        videoPlayer.Prepare();
+        yield return new WaitUntil(() => videoPlayer.isPrepared);
+
+        blackScreen.gameObject.SetActive(false);
+        videoPlayer.Play();
+        yield return new WaitWhile(() => videoPlayer.isPlaying);
+        videoPlayer.Pause();
+        readyButton.SetActive(true);
+        yield return new WaitUntil(() => readyToContinue);
+        readyToContinue = false;
+        readyButton.SetActive(false);
     }
 
     // --------------------------------------------------
@@ -160,5 +218,10 @@ public class AnimateScenes : MonoBehaviour, IPointerClickHandler
             % SceneManager.sceneCountInBuildSettings;
 
         SceneManager.LoadScene(nextIndex);
+    }
+
+    public void ResumeReadyToContinue()
+    {
+        readyToContinue = true;
     }
 }

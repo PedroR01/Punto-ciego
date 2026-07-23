@@ -20,6 +20,11 @@ TagManager:
   - Computer
   - Locker
   - PostIt
+  - PostItReaded
+  - Water
+  - Bench
+  - Sky
+  - KidsGroup
   layers:
   - Default
   - TransparentFX

@@ -8,12 +8,9 @@ public class CuartoDosGM : MonoBehaviour
 
     public static event Action OnIncorrectState;
 
-    //public static event Action OnCorrectState;
     public static event Action<InteractionContext> OnCorrectState;
 
     public static event Action OnDefaultState;
-
-    private bool sceneCompleted = false;
 
     [SerializeField]
     private Transform closedBook;
@@ -23,6 +20,9 @@ public class CuartoDosGM : MonoBehaviour
 
     [SerializeField]
     private List<InteractionObjects> sceneInteractionObjects;
+
+    [SerializeField]
+    private AudioManager audioMg;
 
     private void Awake()
     {
@@ -51,22 +51,19 @@ public class CuartoDosGM : MonoBehaviour
     {
         if (context.result == InteractionResult.Incorrect)
         {
-            HandleSoundSfx(context.target);
-
             OnIncorrectState?.Invoke();
         }
         else if (context.result == InteractionResult.Correct)
         {
             HandleSoundSfx(context.target);
 
+            context.target.GetComponent<UIInteractionTransition>().ActivateColor(); // AGREGRAR SCRIPT A C/U DE LOS INTERACTUABLES PARA GM
             sceneInteractionObjects.Remove(context.objectType);
             OnCorrectState?.Invoke(context);
         }
         else
             OnDefaultState?.Invoke();
     }
-
-    public bool GetSceneCompleted() => sceneCompleted;
 
     public List<InteractionObjects> GetInteractiveObjectsRemaining() => sceneInteractionObjects;
 
@@ -76,16 +73,25 @@ public class CuartoDosGM : MonoBehaviour
 
     private void HandleSoundSfx(Transform gameObject)
     {
-        if (gameObject.TryGetComponent<AudioSource>(out var objSfx))
-            if (!objSfx.isPlaying)
-                objSfx.Play();
+        AudioSource sound = gameObject.GetComponent<AudioSource>();
+        if (sound)
+        {
+            if (audioMg != null)
+            {
+                if (!audioMg.isActiveAndEnabled)
+                    audioMg.enabled = true;
+                audioMg.StopAllWithFadeOut(); // Se apaga automaticamente
+            }
+
+            if (!sound.isPlaying)
+                sound.Play();
+        }
     }
 
     private void HandleSceneCompleted()
     {
         Debug.Log("Escenario terminado, abriendo libro...");
 
-        sceneCompleted = true;
         closedBook.gameObject.SetActive(false);
         openBook.gameObject.SetActive(true);
     }

@@ -66,8 +66,12 @@ public class DecalsNoise : MonoBehaviour
 
     private void EraseDecal(InteractionObjects relatedObject)
     {
+        Enum.TryParse(transform.tag, true, out InteractionObjects results);
+        Debug.Log("Contenido del out: " + results + " booleano --> " + results.Equals(relatedObject));
+
         if (Enum.TryParse(transform.tag, true, out InteractionObjects result) && result.Equals(relatedObject))
         {
+            Debug.Log("Entró");
             StartCoroutine(FadeOut());
         }
     }
