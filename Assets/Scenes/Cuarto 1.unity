@@ -21597,6 +21597,30 @@ PrefabInstance:
       propertyPath: m_FrequencyGain
       value: 0.45
       objectReference: {fileID: 0}
+    - target: {fileID: 3706022531223485454, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: m_VerticalAxis.m_MaxSpeed
+      value: 2.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706022531223485454, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: m_VerticalAxis.m_AccelTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706022531223485454, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: m_VerticalAxis.m_DecelTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706022531223485454, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: m_HorizontalAxis.m_MaxSpeed
+      value: 2.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706022531223485454, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: m_HorizontalAxis.m_AccelTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706022531223485454, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: m_HorizontalAxis.m_DecelTime
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4713021182889224271, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.012001038

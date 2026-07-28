@@ -175,8 +175,10 @@ public class AnimateScenes : MonoBehaviour
 
         readyToContinue = false;
         readyButton.SetActive(false);
-        videoPlayer.Play();
         LoadNextScene(out AsyncOperation op); // Esto no habría que ejecutarlo en el cuarto 6 (escenario final)... gasta recursos innecesariamente.
+        yield return new WaitUntil(() => op.progress >= .9f);
+
+        videoPlayer.Play();
 
         long stopFrame = (long)videoPlayer.frameCount - 5;
         yield return new WaitUntil(() => videoPlayer.frame >= stopFrame);
