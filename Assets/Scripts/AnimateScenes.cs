@@ -1,8 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using System.Collections;
 
 public class AnimateScenes : MonoBehaviour
 {
@@ -10,6 +10,9 @@ public class AnimateScenes : MonoBehaviour
     [SerializeField] private RawImage blackScreen;
 
     [SerializeField] private float fadeDuration = 1.5f;
+
+    [Header("Loader")]
+    [SerializeField] private GameObject loaderComponent;
 
     [Header("Subtitles")]
     [SerializeField] private Image[] subtitles;
@@ -54,14 +57,12 @@ public class AnimateScenes : MonoBehaviour
 
     private void OnEnable()
     {
-        // Subscribe to the end event when the script becomes active
         if (isMenu)
             this.GetComponentInChildren<VideoPlayer>().loopPointReached += OnVideoFinished;
     }
 
     private void OnDisable()
     {
-        // Always unsubscribe from events to prevent memory leaks
         if (isMenu)
             this.GetComponentInChildren<VideoPlayer>().loopPointReached -= OnVideoFinished;
     }
@@ -84,8 +85,17 @@ public class AnimateScenes : MonoBehaviour
     private IEnumerator ShowSubtitlesRoutine(int index)
     {
         subtitles[index].gameObject.SetActive(true);
-        yield return new WaitForSeconds(subtitlesTime);
-#warning Aca quedaría mejor si se hace un fade out y fade in a los subtitulos.
+        StartCoroutine(SubtitlesFadeAnimation(index, 0, 1));
+
+        if (index == 0)
+            yield return new WaitWhile(() => audioConfig.audioIn.isPlaying);
+        else
+            yield return new WaitWhile(() => audioConfig.audioOut.isPlaying);
+
+        yield return new WaitForSeconds(1f);
+
+        yield return StartCoroutine(SubtitlesFadeAnimation(index, 1, 0));
+
         subtitles[index].gameObject.SetActive(false);
     }
 
@@ -105,10 +115,6 @@ public class AnimateScenes : MonoBehaviour
             yield return PlayVideo(videoFinal);
             placaFinal.SetActive(true);
             yield return null;
-        }
-        else
-        {
-            LoadNextScene();
         }
     }
 
@@ -139,18 +145,6 @@ public class AnimateScenes : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // AUDIO
-    // --------------------------------------------------
-
-    private IEnumerator PlayAudio(AudioSource audio)
-    {
-        if (audio == null) yield break;
-
-        audio.Play();
-        yield return new WaitWhile(() => audio.isPlaying);
-    }
-
-    // --------------------------------------------------
     // VIDEO
     // --------------------------------------------------
 
@@ -166,29 +160,35 @@ public class AnimateScenes : MonoBehaviour
         blackScreen.gameObject.SetActive(false);
         videoPlayer.Play();
 
-        if (subtitles.Length > 0)
-            StartCoroutine(ShowSubtitlesRoutine(1));
-
         if (audioConfig.audioOut == null) yield break;
 
         audioConfig.audioOut.Play();
+        if (subtitles.Length > 0)
+            StartCoroutine(ShowSubtitlesRoutine(1));
+
         yield return new WaitWhile(() => videoPlayer.time < videoTimeStop);
         videoPlayer.Pause();
+        yield return new WaitWhile(() => subtitles[1].isActiveAndEnabled);
 
-        yield return new WaitWhile(() => audioConfig.audioOut.isPlaying);
         readyButton.SetActive(true);
         yield return new WaitUntil(() => readyToContinue);
 
         readyToContinue = false;
         readyButton.SetActive(false);
         videoPlayer.Play();
-        yield return new WaitWhile(() => videoPlayer.isPlaying);
+        LoadNextScene(out AsyncOperation op); // Esto no habría que ejecutarlo en el cuarto 6 (escenario final)... gasta recursos innecesariamente.
+
+        long stopFrame = (long)videoPlayer.frameCount - 5;
+        yield return new WaitUntil(() => videoPlayer.frame >= stopFrame);
+        videoPlayer.Pause();
 
         readyButton.SetActive(true);
         yield return new WaitUntil(() => readyToContinue);
 
         readyToContinue = false;
         readyButton.SetActive(false);
+        if (!isFinal)
+            op.allowSceneActivation = true;
     }
 
     private IEnumerator PlayVideo(VideoClip video)
@@ -211,13 +211,72 @@ public class AnimateScenes : MonoBehaviour
     // SCENE
     // --------------------------------------------------
 
-    private void LoadNextScene()
+    private void LoadNextScene(out AsyncOperation operation)
     {
         int nextIndex =
             (SceneManager.GetActiveScene().buildIndex + 1)
             % SceneManager.sceneCountInBuildSettings;
 
-        SceneManager.LoadScene(nextIndex);
+        operation = SceneManager.LoadSceneAsync(nextIndex);
+        operation.allowSceneActivation = false;
+        //loaderComponent.SetActive(true);
+        //StartCoroutine(AnimateLoader(operation));
+    }
+
+    private IEnumerator AnimateLoader(AsyncOperation op)
+    {
+        Image loader = loaderComponent.GetComponentInChildren<Image>();
+        RectTransform loaderRect = loader.rectTransform;
+        Vector3 baseScale = loaderRect.localScale;
+
+        float pulseSpeed = 3f;      // velocidad de la pulsación
+        float minScale = 0.85f;     // escala mínima (85%)
+        float maxScale = 1.1f;      // escala máxima (110%)
+        float minAlpha = 0.4f;      // opacidad mínima
+        float maxAlpha = 1f;        // opacidad máxima
+        while (op.progress < .9f)
+        {
+            float t = (Mathf.Sin(Time.unscaledTime * pulseSpeed) + 1f) / 2f; // 0 a 1
+
+            float scaleValue = Mathf.Lerp(minScale, maxScale, t);
+            loaderRect.localScale = baseScale * scaleValue;
+
+            float alphaValue = Mathf.Lerp(minAlpha, maxAlpha, t);
+            Color c = loader.color;
+            c.a = alphaValue;
+            loader.color = c;
+
+            yield return null;
+        }
+        // Restaurar valores originales al terminar
+        loaderRect.localScale = baseScale;
+        Color finalColor = loader.color;
+        finalColor.a = 1f;
+        loader.color = finalColor;
+        // Hacer animacion de fade out y desactivar componente loader
+        loaderComponent.SetActive(false);
+    }
+
+    private IEnumerator SubtitlesFadeAnimation(int index, float alphaIn, float alphaOut)
+    {
+        float currentTime = 0f;
+        Color startColor = Color.white;
+        startColor.a = alphaIn;
+        Color endColor = Color.white;
+        endColor.a = alphaOut;
+
+        while (currentTime < fadeDuration)
+        {
+            currentTime += Time.deltaTime;
+
+            float t = Mathf.Clamp01(currentTime / fadeDuration);
+            subtitles[index].color = Color.Lerp(startColor, endColor, t);
+
+            yield return null;
+        }
+        Color colorFinal = subtitles[index].color;
+        colorFinal.a = alphaOut;
+        subtitles[index].color = colorFinal;
     }
 
     public void ResumeReadyToContinue()
