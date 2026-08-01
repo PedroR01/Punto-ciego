@@ -415,15 +415,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackScreen: {fileID: 1250228101}
   fadeDuration: 2
+  loaderComponent: {fileID: 0}
   subtitles: []
   subtitlesTime: 0
   visualResource: {fileID: 96948869}
   videoPlayer: {fileID: 1933198341}
+  videoFinal: {fileID: 0}
+  placaFinal: {fileID: 0}
+  videoTimeStop: 10
+  readyButton: {fileID: 1939567662}
   audioConfig:
     audioIn: {fileID: 0}
     audioOut: {fileID: 0}
   isMenu: 1
-  readyButton: {fileID: 1939567662}
+  isFinal: 0
 --- !u!1 &1250228100
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,7 +836,7 @@ RectTransform:
   m_GameObject: {fileID: 1939567662}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.36485, y: 5.38376, z: 3.36485}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 903057748}
@@ -840,7 +845,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.0000018673679}
-  m_SizeDelta: {x: 160, y: 60}
+  m_SizeDelta: {x: 872, y: 218}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1939567664
 MonoBehaviour:
@@ -950,15 +955,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackScreen: {fileID: 0}
   fadeDuration: 1.5
+  loaderComponent: {fileID: 0}
   subtitles: []
   subtitlesTime: 0
   visualResource: {fileID: 96948869}
   videoPlayer: {fileID: 1933198341}
+  videoFinal: {fileID: 0}
+  placaFinal: {fileID: 0}
+  videoTimeStop: 10
+  readyButton: {fileID: 0}
   audioConfig:
     audioIn: {fileID: 0}
     audioOut: {fileID: 0}
   isMenu: 1
-  readyButton: {fileID: 0}
+  isFinal: 0
 --- !u!222 &123948833794023622
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1011,7 +1021,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.7848542, y: 0.7497408}
   m_AnchorMax: {x: 0.7848542, y: 0.7497408}
-  m_AnchoredPosition: {x: 380.99997, y: 237.99998}
+  m_AnchoredPosition: {x: 381, y: 238}
   m_SizeDelta: {x: 299, y: 300}
   m_Pivot: {x: 1, y: 1}
 --- !u!1 &123948833794023625
