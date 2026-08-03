@@ -4296,7 +4296,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fc9cb98f2d33b344a8f8d96aa6255a3a, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.01
+  m_Volume: 0.049
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -16449,7 +16449,7 @@ MonoBehaviour:
   interactionObjectsVideos:
   - {fileID: 32900000, guid: 92f5c488da1aea445ae4fec11ed71973, type: 3}
   - {fileID: 32900000, guid: 53249753fc763ff4cae4bc242791c5fb, type: 3}
-  - {fileID: 32900000, guid: 66c9c25df4845d84090988f8bdc3eaaf, type: 3}
+  - {fileID: 32900000, guid: adcf43f244fe54a4badd478cbb76b6e1, type: 3}
   - {fileID: 32900000, guid: b54101c64480ddb479209f820730310c, type: 3}
   - {fileID: 32900000, guid: 94b09f8b42cba4e45af4e4d08ef36e62, type: 3}
   InteractionObjectsRenders:
