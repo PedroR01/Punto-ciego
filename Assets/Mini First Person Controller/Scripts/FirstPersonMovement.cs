@@ -101,7 +101,10 @@ public class FirstPersonMovement : MonoBehaviour
         if (other.gameObject.tag.Equals("Floor"))
             IsGrounded = true;
         else if (other.gameObject.tag.Equals("Water"))
+        {
+            IsGrounded = true;
             IsSwiming = true;
+        }
     }
 
     private void OnCollisionStay(Collision other)
@@ -109,7 +112,10 @@ public class FirstPersonMovement : MonoBehaviour
         if (other.gameObject.tag.Equals("Floor"))
             IsGrounded = true;
         else if (other.gameObject.tag.Equals("Water"))
+        {
+            IsGrounded = true;
             IsSwiming = true;
+        }
     }
 
     private void OnCollisionExit(Collision other)

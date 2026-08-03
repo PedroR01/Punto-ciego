@@ -22893,6 +22893,18 @@ PrefabInstance:
       propertyPath: requiredGazeTime
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 858117180, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: speed
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 858117180, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: canJump
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 858117180, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
+      propertyPath: runSpeed
+      value: 2.25
+      objectReference: {fileID: 0}
     - target: {fileID: 858117181, guid: 161a68b3f72adaa40af60f718746ee7f, type: 3}
       propertyPath: m_AngularDrag
       value: 0

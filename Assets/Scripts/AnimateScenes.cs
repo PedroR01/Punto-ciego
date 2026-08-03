@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using static UnityEngine.Experimental.Rendering.Universal.PixelPerfectCamera;
 
 public class AnimateScenes : MonoBehaviour
 {
@@ -43,6 +44,8 @@ public class AnimateScenes : MonoBehaviour
     private bool readyToContinue = false;
 
     private bool isTransitioning;
+
+    private AsyncOperation sceneLoadOperation;
 
     private void Awake()
     {
@@ -103,16 +106,20 @@ public class AnimateScenes : MonoBehaviour
     {
         isTransitioning = true;
 
-        yield return FadeToBlack();
-
         if (!isMenu)
         {
+            yield return FadeToBlack();
             yield return PlayVideo();
             yield return FadeToBlack();
+        }
+        else
+        {
+            LoadNextScene(out AsyncOperation op, true);
         }
         if (isFinal)
         {
             yield return PlayVideo(videoFinal);
+            yield return FadeToBlack();
             placaFinal.SetActive(true);
             yield return null;
         }
@@ -122,7 +129,7 @@ public class AnimateScenes : MonoBehaviour
     // FADE
     // --------------------------------------------------
 
-    private IEnumerator FadeToBlack()
+    public IEnumerator FadeToBlack() // Llamado también desde HandleManifest para video final
     {
         //transform.GetComponent<Image>().enabled = false;
         blackScreen.gameObject.SetActive(true);
@@ -202,18 +209,13 @@ public class AnimateScenes : MonoBehaviour
         blackScreen.gameObject.SetActive(false);
         videoPlayer.Play();
         yield return new WaitWhile(() => videoPlayer.isPlaying);
-        videoPlayer.Pause();
-        readyButton.SetActive(true);
-        yield return new WaitUntil(() => readyToContinue);
-        readyToContinue = false;
-        readyButton.SetActive(false);
     }
 
     // --------------------------------------------------
     // SCENE
     // --------------------------------------------------
 
-    private void LoadNextScene(out AsyncOperation operation)
+    private void LoadNextScene(out AsyncOperation operation, bool showLoader = false)
     {
         int nextIndex =
             (SceneManager.GetActiveScene().buildIndex + 1)
@@ -221,8 +223,12 @@ public class AnimateScenes : MonoBehaviour
 
         operation = SceneManager.LoadSceneAsync(nextIndex);
         operation.allowSceneActivation = false;
-        //loaderComponent.SetActive(true);
-        //StartCoroutine(AnimateLoader(operation));
+        sceneLoadOperation = operation;
+        if (showLoader)
+        {
+            loaderComponent.SetActive(true);
+            StartCoroutine(AnimateLoader(operation));
+        }
     }
 
     private IEnumerator AnimateLoader(AsyncOperation op)
@@ -284,5 +290,16 @@ public class AnimateScenes : MonoBehaviour
     public void ResumeReadyToContinue()
     {
         readyToContinue = true;
+    }
+
+    public void AllowSceneActivation()
+    {
+        if (sceneLoadOperation != null)
+            sceneLoadOperation.allowSceneActivation = true;
+    }
+
+    public void DisableBlackScreen()
+    {
+        blackScreen.gameObject.SetActive(false);
     }
 }

@@ -12,11 +12,15 @@ public class ObjectZoneAudioTrigger : MonoBehaviour
     [SerializeField]
     private AudioSource audioSource;
 
+    [SerializeField]
+    private bool isInteractable = true;
+
     private bool playerInside = false;
     private Coroutine playRoutine;
 
     private void Start()
     {
+        if(isInteractable)
         this.enabled = false;
     }
 
